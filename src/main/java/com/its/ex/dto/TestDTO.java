@@ -1,10 +1,12 @@
 package com.its.ex.dto;
 
 import com.its.ex.entity.TestEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@AllArgsConstructor // 모든 매개변수를 가진 생성자
+@NoArgsConstructor // 매개변수가 없는 생성자
 @Data
 public class TestDTO {
     private Long id;

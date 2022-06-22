@@ -49,6 +49,8 @@ public class TestClass {
 
     // DB가 깨끗한 상태로 테스트가 되어야 함. 테스트가 끝나면 테스트 데이터가 사라져야 함.
     @Test
+    @Transactional
+    @Rollback(value = true)
     @DisplayName("findAll 테스트")
     public void findAllTest() {
         /**
@@ -81,7 +83,7 @@ public class TestClass {
     @Test
     @DisplayName("삭제 테스트")
     @Transactional
-    @Rollback
+    @Rollback(value = true)
     public void deleteTest() {
         TestDTO testDTO = new TestDTO("데이터1", "데이터2");
         Long saveId = testService.save(testDTO);
@@ -91,6 +93,8 @@ public class TestClass {
     }
 
     @Test
+    @Transactional
+    @Rollback(value = true) // value = true/false로 롤백 기능을 키고 끄는 스위치 느낌
     @DisplayName("수정 테스트")
     public void updateTest() {
         /**
@@ -100,19 +104,19 @@ public class TestClass {
 
         // 1. TestDTO 데이터를 저장하고 saveId를 리턴받음
         // 2. findById(saveId)로 수정전 TestDTO 가져옴
-        // 3. 새로운 TestDTO 객체 선언하고 수정할 데이터를 저장함
-        // 4. 새로만든 수정용 TestDTO에 saveId를 set함
-        // 5. 수정용 TestDTO에 update 메서드 실행
-        // 6. saveId로 수정후 TestDTO 가져옴
-        // 7. 수정전 TestDTO와 수정후 TestDTO 비교
+        // 3. 새로운 TestDTO 객체 선언하고 수정할 데이터와 saveId를 저장함
+        // 4. 수정용 TestDTO에 update 메서드 실행
+        // 5. saveId로 수정후 TestDTO 가져옴
+        // 6. 수정전 TestDTO와 수정후 TestDTO 비교
 
         TestDTO testDTO = new TestDTO("데이터1", "데이터2");
         Long saveId = testService.save(testDTO);
         TestDTO findDTO = testService.findById(saveId);
-        TestDTO updateTestDTO = new TestDTO("수정데이터1", "수정데이터2");
-        updateTestDTO.setId(saveId);
+        TestDTO updateTestDTO = new TestDTO(saveId, "수정데이터1", "수정데이터2");
         testService.update(updateTestDTO);
         TestDTO updatedTestDTO = testService.findById(saveId);
+        System.out.println(findDTO);
+        System.out.println(updatedTestDTO);
         assertThat(findDTO).isNotEqualTo(updatedTestDTO);
     }
 }
